@@ -68,11 +68,18 @@ function clearOutput() {
   displayOutput.innerText = ""
 }
 
-/** Sets up a keymap extension for the CodeMirror editor, including running the code with "Mod-Enter" and indenting with Tab */
+/** Sets up a keymap extension for the CodeMirror editor, including running the code with "Mod-Enter"/"Shift-Enter" and indenting with Tab */
 const keymapExtension = keymap.of([
   indentWithTab,
   {
     key: "Mod-Enter",
+    run: () => {
+      runCode()
+      return true
+    }
+  },
+  {
+    key: "Shift-Enter",
     run: () => {
       runCode()
       return true
