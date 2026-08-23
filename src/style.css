@@ -8,7 +8,10 @@
   --clr-border: #787878;
   --border-thickness: 1px;
   --border-radius: 4px;
+  --border: var(--border-thickness) solid var(--clr-border);
 
+  --gap-05: 0.5rem;
+  --gap-1: 1rem;
   --gap-2: 2rem;
 }
 
@@ -28,11 +31,46 @@ body {
 }
 
 body {
-  padding: 1rem 1rem;
   font-family: var(--font-family, monospace);
   font-size: var(--font-size, 1rem);
   color: var(--clr-foreground);
   background-color: var(--clr-background);
+}
+
+button {
+  font-family: inherit;
+  font-size: 0.875rem;
+  border: var(--border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+
+  /** Hover state */
+  &:hover {
+    background-color: var(--clr-border);
+  }
+
+  /** Pressed state */
+  &:active {
+    background-color: var(--clr-foreground);
+    color: var(--clr-background);
+  }
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 1rem;
+
+  section#actions-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--gap-05);
+  }
 }
 
 main {
@@ -42,6 +80,8 @@ main {
   justify-content: center;
   align-items: center;
   gap: var(--gap-2);
+
+  padding: var(--gap-1) var(--gap-1);
 
   section#code {
     flex: 2;
