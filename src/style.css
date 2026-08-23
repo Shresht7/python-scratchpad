@@ -59,6 +59,10 @@ section#output {
   border-radius: var(--border-radius);
 }
 
+section#output {
+  padding: 0.75rem;
+}
+
 #display-output {
   /** Preserve whitespace and newlines in the output display */
   white-space: pre-wrap;
