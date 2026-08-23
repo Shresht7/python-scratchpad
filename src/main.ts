@@ -98,6 +98,7 @@ function toggleLayout() {
   const currentLayout = main.getAttribute('data-layout')
   const newLayout = currentLayout === 'horizontal' ? 'vertical' : 'horizontal'
   main.setAttribute('data-layout', newLayout)
+  localStorage.setItem('layout', newLayout) // Save the selected layout to localStorage for persistence across sessions
 }
 
 // Register event listener for the toggle layout button to switch between horizontal and vertical layouts
@@ -114,6 +115,9 @@ const themeCompartment = new Compartment()
 
 const savedTheme = localStorage.getItem('theme') as ThemeId || 'one-dark'
 const initialTheme = themes.find(t => t.id === savedTheme) || themes[0]
+
+const savedLayout = localStorage.getItem('layout') || 'horizontal'
+main.setAttribute('data-layout', savedLayout)
 
 /** Applies the given theme palette to the document by setting CSS variables for each color in the palette and updating the body's data-theme attribute */
 function applyThemePalette(theme: { palette: ThemePalette; dark: boolean }) {
