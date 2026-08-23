@@ -1,5 +1,9 @@
 :root {
   --gap-2: 2rem;
+
+  --clr-border: #787878;
+  --border-thickness: 1px;
+  --border-radius: 4px;
 }
 
 *,
@@ -17,7 +21,12 @@ body {
   width: 100dvw;
 }
 
+body {
+  padding: 1rem 1rem;
+}
+
 main {
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,6 +40,13 @@ main {
   section#output {
     flex: 1;
   }
+}
+
+section#code,
+section#output {
+  width: 100%;
+  border: var(--border-thickness) solid var(--clr-border);
+  border-radius: var(--border-radius);
 }
 
 #display-output {

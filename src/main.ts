@@ -6,6 +6,8 @@ import { python } from "@codemirror/lang-python"
 import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
+import "./style.css"
+
 // Initialize MicroPython and setup where to display stdout and stderr
 const micropython = await loadMicroPython({
   stdout: (text: string) => display(text),
