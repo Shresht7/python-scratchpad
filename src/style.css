@@ -124,6 +124,18 @@ select {
   color: var(--theme-foreground);
 }
 
+.flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-05);
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
 header {
   display: flex;
   flex-direction: row;
