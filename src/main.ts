@@ -6,6 +6,9 @@ import { python } from "@codemirror/lang-python"
 import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
+import { Compartment } from "@codemirror/state"
+import { themes, type ThemeId } from './themes'
+
 import "./style.css"
 
 // Initialize MicroPython and setup where to display stdout and stderr
@@ -86,6 +89,10 @@ const themeExtension = EditorView.theme({
   ".cm-scroller": { overflow: "auto", position: 'absolute', inset: 0 },
 })
 
+const themeCompartment = new Compartment()
+
+const savedTheme = localStorage.getItem('theme') as ThemeId || 'one-dark'
+const initialTheme = themes.find(t => t.id === savedTheme) || themes[0]
 
 /** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
 const editor = new EditorView({
@@ -95,6 +102,32 @@ const editor = new EditorView({
     basicSetup,
     python(),
     themeExtension,
+    themeCompartment.of(initialTheme.extension)
   ],
   parent: sourceCode
+})
+
+// Populate Theme Selection Dropdown
+const themeSelect = document.getElementById('theme-select') as HTMLSelectElement
+
+themes.forEach(theme => {
+  const opt = document.createElement('option')
+  opt.value = theme.id
+  opt.textContent = theme.label
+  if (theme.id === savedTheme) {
+    opt.selected = true
+  }
+  themeSelect.appendChild(opt)
+})
+
+// Register event listener for the theme selection dropdown to change the editor's theme based on user selection
+themeSelect.addEventListener('change', (event) => {
+  const theme = themes.find(t => t.id === (event.target as HTMLSelectElement).value)
+  if (!theme) { return }
+
+  editor.dispatch({
+    effects: themeCompartment.reconfigure(theme.extension)
+  })
+
+  localStorage.setItem('theme', theme.id) // Save the selected theme to localStorage for persistence across sessions
 })
