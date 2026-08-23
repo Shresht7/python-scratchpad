@@ -14,6 +14,8 @@ const micropython = await loadMicroPython({
   stderr: (text: string) => display(text),
 })
 
+/** The div where the source code will be entered */
+const sourceCode = document.getElementById("source-code") as HTMLDivElement
 /** The div where the output of the Python code will be displayed */
 const displayOutput = document.getElementById("display-output") as HTMLDivElement
 /** The button to run the Python code */
@@ -61,6 +63,13 @@ const keymapExtension = keymap.of([
   }
 ])
 
+/** Sets up a theme extension for the CodeMirror editor to ensure it takes up the full height of its container and allows scrolling */
+const themeExtension = EditorView.theme({
+  "&": { height: `${sourceCode?.parentElement?.clientHeight ?? 0}px` },
+  ".cm-scroller": { overflow: "auto" },
+})
+
+
 /** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
 const editor = new EditorView({
   doc: '',
@@ -68,6 +77,7 @@ const editor = new EditorView({
     keymapExtension,
     basicSetup,
     python(),
+    themeExtension,
   ],
-  parent: document.getElementById('source-code')!
+  parent: sourceCode
 })
