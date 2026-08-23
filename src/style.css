@@ -42,8 +42,8 @@ body {
 body {
   display: grid;
   grid-template-rows: auto 1fr;
-  padding: 1rem;
-  gap: var(--gap-1);
+  padding: 0.5rem;
+  gap: var(--gap-05);
 
   font-family: var(--font-family, monospace);
   font-size: var(--font-size, 1rem);
@@ -111,7 +111,7 @@ main {
   display: grid;
   grid-template-rows: 2fr 1fr;
   grid-template-columns: none;
-  gap: var(--gap-1);
+  gap: var(--gap-05);
 
   &[data-layout="vertical"] {
     grid-template-rows: 2fr 1fr;
