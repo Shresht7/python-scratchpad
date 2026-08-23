@@ -39,6 +39,7 @@ function display(text: string) {
   displayOutput.innerText += text
 }
 
+/** Clears the output div to remove any previous output */
 function clearOutput() {
   displayOutput.innerText = ""
 }
