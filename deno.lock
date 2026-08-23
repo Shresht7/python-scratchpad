@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:@codemirror/commands@^6.11.0": "6.11.0",
     "npm:@codemirror/lang-python@^6.2.1": "6.2.1",
     "npm:@codemirror/view@^6.43.9": "6.43.9",
     "npm:@micropython/micropython-webassembly-pyscript@1.28.0-6": "1.28.0-6",
@@ -376,6 +377,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@codemirror/commands@^6.11.0",
         "npm:@codemirror/lang-python@^6.2.1",
         "npm:@codemirror/view@^6.43.9",
         "npm:@micropython/micropython-webassembly-pyscript@1.28.0-6",
