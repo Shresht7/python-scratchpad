@@ -113,8 +113,20 @@ const themeExtension = EditorView.theme({
 
 const themeCompartment = new Compartment()
 
-const savedTheme = localStorage.getItem('theme') as ThemeId || 'one-dark'
-const initialTheme = themes.find(t => t.id === savedTheme) || themes[0]
+/** Determines the initial theme based on user preference or system preference */
+function getInitialTheme(): { theme: typeof themes[0]; isSystemPreference: boolean } {
+  const savedTheme = localStorage.getItem('theme') as ThemeId | null
+  if (savedTheme) {
+    const theme = themes.find(t => t.id === savedTheme) || themes[0]
+    return { theme, isSystemPreference: false }
+  }
+  // No saved preference - use system preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const fallbackTheme = themes.find(t => t.dark === prefersDark) || themes[0]
+  return { theme: fallbackTheme, isSystemPreference: true }
+}
+
+const { theme: initialTheme, isSystemPreference } = getInitialTheme()
 
 const savedLayout = localStorage.getItem('layout') || 'horizontal'
 main.setAttribute('data-layout', savedLayout)
@@ -150,7 +162,7 @@ themes.forEach(theme => {
   const opt = document.createElement('option')
   opt.value = theme.id
   opt.textContent = theme.label
-  if (theme.id === savedTheme) {
+  if (theme.id === initialTheme.id) {
     opt.selected = true
   }
   themeSelect.appendChild(opt)
@@ -167,4 +179,15 @@ themeSelect.addEventListener('change', (event) => {
 
   applyThemePalette(theme)
   localStorage.setItem('theme', theme.id) // Save the selected theme to localStorage for persistence across sessions
+})
+
+// Listen for system theme changes and update if user hasn't set a preference
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  if (!localStorage.getItem('theme')) {
+    const prefersDark = e.matches
+    const theme = themes.find(t => t.dark === prefersDark) || themes[0]
+    applyThemePalette(theme)
+    editor.dispatch({ effects: themeCompartment.reconfigure(theme.extension) })
+    themeSelect.value = theme.id
+  }
 })
