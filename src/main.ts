@@ -13,8 +13,8 @@ import "./style.css"
 
 // Initialize MicroPython and setup where to display stdout and stderr
 const micropython = await loadMicroPython({
-  stdout: (text: string) => display(text),
-  stderr: (text: string) => display(text),
+  stdout: (text: string) => display(text, false),
+  stderr: (text: string) => display(text, true),
 })
 
 /** The main element that contains the source code input and output display */
@@ -47,13 +47,20 @@ function runCode() {
     micropython.runPython(src)
   } catch (error) {
     console.error(error)
-    display(`Error: ${error}`)
+    display(`Error: ${error}`, true)
   }
 }
 
 /** Displays the given text in the designated output div */
-function display(text: string) {
-  displayOutput.innerText += text
+function display(text: string, isError = false) {
+  if (isError) {
+    const errorSpan = document.createElement('span')
+    errorSpan.className = 'output-error'
+    errorSpan.textContent = text
+    displayOutput.appendChild(errorSpan)
+  } else {
+    displayOutput.innerText += text
+  }
 }
 
 /** Clears the output div to remove any previous output */
@@ -95,15 +102,15 @@ const savedTheme = localStorage.getItem('theme') as ThemeId || 'one-dark'
 const initialTheme = themes.find(t => t.id === savedTheme) || themes[0]
 
 /** Applies the given theme palette to the document by setting CSS variables for each color in the palette and updating the body's data-theme attribute */
-function applyThemePalette(palette: ThemePalette) {
+function applyThemePalette(theme: { palette: ThemePalette; dark: boolean }) {
   const root = document.documentElement
-  Object.entries(palette).forEach(([key, value]) => {
+  Object.entries(theme.palette).forEach(([key, value]) => {
     root.style.setProperty(`--theme-${key}`, value)
   })
-  document.body.dataset.theme = initialTheme.dark ? 'dark' : 'light'
+  document.body.dataset.theme = theme.dark ? 'dark' : 'light'
 }
 
-applyThemePalette(initialTheme.palette)
+applyThemePalette(initialTheme)
 
 /** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
 const editor = new EditorView({
@@ -140,6 +147,6 @@ themeSelect.addEventListener('change', (event) => {
     effects: themeCompartment.reconfigure(theme.extension)
   })
 
-  applyThemePalette(theme.palette)
+  applyThemePalette(theme)
   localStorage.setItem('theme', theme.id) // Save the selected theme to localStorage for persistence across sessions
 })

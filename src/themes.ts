@@ -18,6 +18,8 @@ export interface ThemePalette {
   cursor: string
   surface: string
   surfaceElevated: string
+  success: string
+  error: string
 }
 
 /** Represents a theme for the CodeMirror editor, including its ID, label, extension, whether it's dark mode, and its color palette */
@@ -40,6 +42,8 @@ const oneDarkPalette: ThemePalette = {
   cursor: oneDarkColors.cursor,
   surface: oneDarkColors.darkBackground,
   surfaceElevated: oneDarkColors.tooltipBackground,
+  success: '#598e34',
+  error: '#e06c75',
 }
 
 /** GitHub Light Theme Palette */
@@ -53,6 +57,8 @@ const githubLightPalette: ThemePalette = {
   cursor: '#0969da',
   surface: '#f6f8fa',
   surfaceElevated: '#ffffff',
+  success: '#2da44e',
+  error: '#cf222e',
 }
 
 /** GitHub Dark Theme Palette */
@@ -66,6 +72,8 @@ const githubDarkPalette: ThemePalette = {
   cursor: '#58a6ff',
   surface: '#161b22',
   surfaceElevated: '#21262d',
+  success: '#3fb950',
+  error: '#f85149',
 }
 
 /** VS Code Light Theme Palette */
@@ -79,6 +87,8 @@ const vsCodeLightPalette: ThemePalette = {
   cursor: '#007acc',
   surface: '#f3f3f3',
   surfaceElevated: '#ffffff',
+  success: '#4ec9b0',
+  error: '#f44747',
 }
 
 /** VS Code Dark Theme Palette */
@@ -92,6 +102,8 @@ const vsCodeDarkPalette: ThemePalette = {
   cursor: '#4fc1ff',
   surface: '#252526',
   surfaceElevated: '#2d2d2d',
+  success: '#4ec9b0',
+  error: '#f44747',
 }
 
 /** Nord Theme Palette */
@@ -105,6 +117,8 @@ const nordPalette: ThemePalette = {
   cursor: '#88c0d0',
   surface: '#3b4252',
   surfaceElevated: '#434c5e',
+  success: '#a3be8c',
+  error: '#bf616a',
 }
 
 /** List of all supported themes */
