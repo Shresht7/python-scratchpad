@@ -13,8 +13,6 @@
   <header>
     <h1>quippy</h1>
     <section id="actions-toolbar">
-      <select id="theme-select" title="Theme" aria-label="Editor Theme"></select>
-      <button id="toggle-layout" title="Toggle Layout">Toggle Layout</button>
       <button id="run-button" title="Run">Run</button>
     </section>
   </header>
@@ -30,6 +28,17 @@
     </section>
 
   </main>
+
+  <footer>
+    <div>
+      <button id="toggle-layout" title="Toggle Layout">Toggle Layout</button>
+    </div>
+
+    <div>
+      <label for="theme-select">Theme:</label>
+      <select id="theme-select" title="Theme" aria-label="Editor Theme"></select>
+    </div>
+  </footer>
 
   <script type="module" src="/src/main.ts"></script>
 </body>
