@@ -61,14 +61,12 @@ function runCode() {
 
 /** Displays the given text in the designated output div */
 function display(text: string, isError = false) {
+  const span = document.createElement('span')
   if (isError) {
-    const errorSpan = document.createElement('span')
-    errorSpan.className = 'output-error'
-    errorSpan.textContent = text
-    displayOutput.appendChild(errorSpan)
-  } else {
-    displayOutput.innerText += text
+    span.className = 'output-error'
   }
+  span.textContent = text + '\n'
+  displayOutput.appendChild(span)
 }
 
 /** Clears the output div to remove any previous output */
