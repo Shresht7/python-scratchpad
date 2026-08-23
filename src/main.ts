@@ -1,8 +1,10 @@
-// Library
 import { loadMicroPython } from '@micropython/micropython-webassembly-pyscript'
+
 import { EditorView, basicSetup } from "codemirror"
 import { python } from "@codemirror/lang-python"
+
 import { keymap } from "@codemirror/view"
+import { indentWithTab } from "@codemirror/commands"
 
 // Initialize MicroPython and setup where to display stdout and stderr
 const micropython = await loadMicroPython({
@@ -45,8 +47,9 @@ function clearOutput() {
   displayOutput.innerText = ""
 }
 
-/** Sets up a keymap extension for the CodeMirror editor to run the code when "Mod-Enter" is pressed */
+/** Sets up a keymap extension for the CodeMirror editor, including running the code with "Mod-Enter" and indenting with Tab */
 const keymapExtension = keymap.of([
+  indentWithTab,
   {
     key: "Mod-Enter",
     run: () => {
