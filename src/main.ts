@@ -7,7 +7,7 @@ import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
 import { Compartment } from "@codemirror/state"
-import { themes, type ThemeId } from './themes'
+import { themes, type ThemeId, type ThemePalette } from './themes'
 
 import "./style.css"
 
@@ -94,6 +94,17 @@ const themeCompartment = new Compartment()
 const savedTheme = localStorage.getItem('theme') as ThemeId || 'one-dark'
 const initialTheme = themes.find(t => t.id === savedTheme) || themes[0]
 
+/** Applies the given theme palette to the document by setting CSS variables for each color in the palette and updating the body's data-theme attribute */
+function applyThemePalette(palette: ThemePalette) {
+  const root = document.documentElement
+  Object.entries(palette).forEach(([key, value]) => {
+    root.style.setProperty(`--theme-${key}`, value)
+  })
+  document.body.dataset.theme = initialTheme.dark ? 'dark' : 'light'
+}
+
+applyThemePalette(initialTheme.palette)
+
 /** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
 const editor = new EditorView({
   doc: '',
@@ -129,5 +140,6 @@ themeSelect.addEventListener('change', (event) => {
     effects: themeCompartment.reconfigure(theme.extension)
   })
 
+  applyThemePalette(theme.palette)
   localStorage.setItem('theme', theme.id) // Save the selected theme to localStorage for persistence across sessions
 })

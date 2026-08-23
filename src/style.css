@@ -13,6 +13,16 @@
   --gap-05: 0.5rem;
   --gap-1: 1rem;
   --gap-2: 2rem;
+
+  --theme-background: #f5f5f5;
+  --theme-foreground: #333;
+  --theme-muted: #787878;
+  --theme-accent: #007acc;
+  --theme-border: #787878;
+  --theme-selection: #add6ff;
+  --theme-cursor: #007acc;
+  --theme-surface: #ffffff;
+  --theme-surface-elevated: #f5f5f5;
 }
 
 *,
@@ -22,7 +32,6 @@
   margin: 0;
   padding: 0;
 }
-
 
 html,
 body {
@@ -38,28 +47,42 @@ body {
 
   font-family: var(--font-family, monospace);
   font-size: var(--font-size, 1rem);
-  color: var(--clr-foreground);
-  background-color: var(--clr-background);
+  color: var(--theme-foreground);
+  background-color: var(--theme-background);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 button {
   font-family: inherit;
   font-size: 0.875rem;
-  border: var(--border);
+  border: var(--theme-border);
   border-radius: var(--border-radius);
   cursor: pointer;
   padding: 0.25rem 0.5rem;
+  background-color: var(--theme-surface);
+  color: var(--theme-foreground);
+}
 
-  /** Hover state */
-  &:hover {
-    background-color: var(--clr-border);
-  }
+button:hover {
+  background-color: var(--theme-border);
+}
 
-  /** Pressed state */
-  &:active {
-    background-color: var(--clr-foreground);
-    color: var(--clr-background);
-  }
+button:active {
+  background-color: var(--theme-foreground);
+  color: var(--theme-background);
+}
+
+select {
+  font-family: inherit;
+  font-size: 0.875rem;
+  border: var(--theme-border);
+  border-radius: var(--border-radius);
+  padding: 0.25rem 0.5rem;
+  background-color: var(--theme-surface);
+  color: var(--theme-foreground);
 }
 
 header {
@@ -68,14 +91,17 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 0.25rem 1rem;
+  background-color: var(--theme-surface);
+  border: var(--theme-border);
+  border-radius: var(--border-radius);
+}
 
-  section#actions-toolbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: var(--gap-05);
-  }
+section#actions-toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-05);
 }
 
 main {
@@ -101,8 +127,9 @@ main {
 section#code,
 section#output {
   width: 100%;
-  border: var(--border-thickness) solid var(--clr-border);
+  border: var(--border-thickness) solid var(--theme-border);
   border-radius: var(--border-radius);
+  background-color: var(--theme-surface);
 }
 
 #source-code {
@@ -120,9 +147,9 @@ section#code {
 
 section#output {
   padding: 0.75rem;
+  color: var(--theme-foreground);
 }
 
 #display-output {
-  /** Preserve whitespace and newlines in the output display */
   white-space: pre-wrap;
 }
