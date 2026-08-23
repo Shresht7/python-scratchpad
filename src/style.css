@@ -71,6 +71,11 @@ button {
   background-color: var(--theme-surface);
   color: var(--theme-foreground);
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 button:hover {
@@ -210,4 +215,22 @@ section#output {
 
 #display-output {
   white-space: pre-wrap;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.icon use {
+  fill: currentColor;
 }
