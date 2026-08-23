@@ -43,3 +43,11 @@ function display(text: string) {
 function clearOutput() {
   displayOutput.innerText = ""
 }
+
+// Register event listener for keydown events to allow running the code with Ctrl+Enter or Shift+Enter
+sourceCode.addEventListener('keydown', (event) => {
+  if ((event.ctrlKey || event.shiftKey) && event.key === 'Enter') {
+    event.preventDefault() // Stop the event from propagating to the textarea to prevent adding a new line
+    runCode()
+  }
+})
