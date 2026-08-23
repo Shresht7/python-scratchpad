@@ -1,6 +1,8 @@
 // Library
 import { loadMicroPython } from '@micropython/micropython-webassembly-pyscript'
-import { editor } from './editor'
+import { EditorView, basicSetup } from "codemirror"
+import { python } from "@codemirror/lang-python"
+import { keymap } from "@codemirror/view"
 
 // Initialize MicroPython and setup where to display stdout and stderr
 const micropython = await loadMicroPython({
@@ -43,11 +45,24 @@ function clearOutput() {
   displayOutput.innerText = ""
 }
 
-// TODO: Add a feature to allow running the code with Ctrl+Enter or Shift+Enter for CodeMirror
-// // Register event listener for keydown events to allow running the code with Ctrl+Enter or Shift+Enter
-// sourceCode.addEventListener('keydown', (event) => {
-//   if ((event.ctrlKey || event.shiftKey) && event.key === 'Enter') {
-//     event.preventDefault() // Stop the event from propagating to the textarea to prevent adding a new line
-//     runCode()
-//   }
-// })
+/** Sets up a keymap extension for the CodeMirror editor to run the code when "Mod-Enter" is pressed */
+const keymapExtension = keymap.of([
+  {
+    key: "Mod-Enter",
+    run: () => {
+      runCode()
+      return true
+    }
+  }
+])
+
+/** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
+const editor = new EditorView({
+  doc: '',
+  extensions: [
+    keymapExtension,
+    basicSetup,
+    python(),
+  ],
+  parent: document.getElementById('source-code')!
+})
