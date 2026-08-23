@@ -126,7 +126,7 @@ function getInitialTheme(): { theme: typeof themes[0]; isSystemPreference: boole
   return { theme: fallbackTheme, isSystemPreference: true }
 }
 
-const { theme: initialTheme, isSystemPreference } = getInitialTheme()
+const { theme: initialTheme } = getInitialTheme()
 
 const savedLayout = localStorage.getItem('layout') || 'horizontal'
 main.setAttribute('data-layout', savedLayout)
