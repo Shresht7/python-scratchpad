@@ -32,3 +32,8 @@ main {
     flex: 1;
   }
 }
+
+#display-output {
+  /** Preserve whitespace and newlines in the output display */
+  white-space: pre-wrap;
+}
