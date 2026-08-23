@@ -1,9 +1,12 @@
 :root {
-  --gap-2: 2rem;
+  --font-family: "JetBrains Mono", monospace;
+  --font-size: 1rem;
 
   --clr-border: #787878;
   --border-thickness: 1px;
   --border-radius: 4px;
+
+  --gap-2: 2rem;
 }
 
 *,
@@ -23,6 +26,8 @@ body {
 
 body {
   padding: 1rem 1rem;
+  font-family: var(--font-family, monospace);
+  font-size: var(--font-size, 1rem);
 }
 
 main {
