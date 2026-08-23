@@ -1,5 +1,6 @@
 // Library
 import { loadMicroPython } from '@micropython/micropython-webassembly-pyscript'
+import { editor } from './editor'
 
 // Initialize MicroPython and setup where to display stdout and stderr
 const micropython = await loadMicroPython({
@@ -7,8 +8,6 @@ const micropython = await loadMicroPython({
   stderr: (text: string) => display(text),
 })
 
-/** The textarea where the user can input Python code */
-const sourceCode = document.getElementById("source-code") as HTMLTextAreaElement
 /** The div where the output of the Python code will be displayed */
 const displayOutput = document.getElementById("display-output") as HTMLDivElement
 /** The button to run the Python code */
@@ -20,7 +19,7 @@ runButton.addEventListener("click", runCode)
 /** Executes the Python code entered by the user in the textarea and displays the output in the designated div */
 function runCode() {
   // Get the Python code from the textarea
-  const src = sourceCode.value
+  const src = editor.state.doc.toString()
   if (!src) { return }
 
   clearOutput() // Clear previous output before running new code
@@ -44,10 +43,11 @@ function clearOutput() {
   displayOutput.innerText = ""
 }
 
-// Register event listener for keydown events to allow running the code with Ctrl+Enter or Shift+Enter
-sourceCode.addEventListener('keydown', (event) => {
-  if ((event.ctrlKey || event.shiftKey) && event.key === 'Enter') {
-    event.preventDefault() // Stop the event from propagating to the textarea to prevent adding a new line
-    runCode()
-  }
-})
+// TODO: Add a feature to allow running the code with Ctrl+Enter or Shift+Enter for CodeMirror
+// // Register event listener for keydown events to allow running the code with Ctrl+Enter or Shift+Enter
+// sourceCode.addEventListener('keydown', (event) => {
+//   if ((event.ctrlKey || event.shiftKey) && event.key === 'Enter') {
+//     event.preventDefault() // Stop the event from propagating to the textarea to prevent adding a new line
+//     runCode()
+//   }
+// })
