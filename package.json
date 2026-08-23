@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@micropython/micropython-webassembly-pyscript": "1.28.0-6"
+    "@codemirror/lang-python": "^6.2.1",
+    "@micropython/micropython-webassembly-pyscript": "1.28.0-6",
+    "codemirror": "^6.0.2"
   },
   "devDependencies": {
     "typescript": "~6.0.2",
