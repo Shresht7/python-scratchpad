@@ -14,10 +14,17 @@ const micropython = await loadMicroPython({
   stderr: (text: string) => display(text),
 })
 
+/** The main element that contains the source code input and output display */
+const main = document.getElementsByTagName('main')[0]
+
 /** The div where the source code will be entered */
 const sourceCode = document.getElementById("source-code") as HTMLDivElement
 /** The div where the output of the Python code will be displayed */
 const displayOutput = document.getElementById("display-output") as HTMLDivElement
+
+/** The button to toggle the layout of the main element between horizontal and vertical */
+const toggleLayoutButton = document.getElementById('toggle-layout') as HTMLButtonElement
+
 /** The button to run the Python code */
 const runButton = document.getElementById("run-button") as HTMLButtonElement
 
@@ -63,10 +70,20 @@ const keymapExtension = keymap.of([
   }
 ])
 
+/** Toggles the layout of the main element between horizontal and vertical by changing its data-layout attribute and dispatching a layout-change event */
+function toggleLayout() {
+  const currentLayout = main.getAttribute('data-layout')
+  const newLayout = currentLayout === 'horizontal' ? 'vertical' : 'horizontal'
+  main.setAttribute('data-layout', newLayout)
+}
+
+// Register event listener for the toggle layout button to switch between horizontal and vertical layouts
+toggleLayoutButton.addEventListener('click', toggleLayout)
+
 /** Sets up a theme extension for the CodeMirror editor to ensure it takes up the full height of its container and allows scrolling */
 const themeExtension = EditorView.theme({
-  "&": { height: `${sourceCode?.parentElement?.clientHeight ?? 0}px` },
-  ".cm-scroller": { overflow: "auto" },
+  "&": { height: "100%", position: 'relative' },
+  ".cm-scroller": { overflow: "auto", position: 'absolute', inset: 0 },
 })
 
 

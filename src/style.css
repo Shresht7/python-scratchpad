@@ -105,6 +105,19 @@ section#output {
   border-radius: var(--border-radius);
 }
 
+#source-code {
+  height: 100%;
+  width: 100%;
+}
+
+section#code {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
 section#output {
   padding: 0.75rem;
 }
