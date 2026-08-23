@@ -19,10 +19,19 @@ runButton.addEventListener("click", runCode)
 
 /** Executes the Python code entered by the user in the textarea and displays the output in the designated div */
 function runCode() {
+  // Get the Python code from the textarea
   const src = sourceCode.value
   if (!src) { return }
-  clearOutput()
-  micropython.runPython(src)
+
+  clearOutput() // Clear previous output before running new code
+
+  // Run the Python code using the MicroPython instance and handle any errors that may occur
+  try {
+    micropython.runPython(src)
+  } catch (error) {
+    console.error(error)
+    display(`Error: ${error}`)
+  }
 }
 
 /** Displays the given text in the designated output div */
