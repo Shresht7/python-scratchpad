@@ -1,11 +1,111 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:@codemirror/commands@^6.11.0": "6.11.0",
+    "npm:@codemirror/lang-python@^6.2.1": "6.2.1",
+    "npm:@codemirror/view@^6.43.9": "6.43.9",
     "npm:@micropython/micropython-webassembly-pyscript@1.28.0-6": "1.28.0-6",
+    "npm:codemirror@^6.0.2": "6.0.2",
     "npm:typescript@~6.0.2": "6.0.3",
     "npm:vite@^8.2.0": "8.2.2"
   },
   "npm": {
+    "@codemirror/autocomplete@6.20.3": {
+      "integrity": "sha512-tlosUqb+3BbxCxZdu4tKeRghPFC+QM7q4X5YhKV2eCmPG+1r2F3f4AaSz5sCrFqUtX4Jh20VFTKecl16MgiV9g==",
+      "dependencies": [
+        "@codemirror/language",
+        "@codemirror/state",
+        "@codemirror/view",
+        "@lezer/common"
+      ]
+    },
+    "@codemirror/commands@6.11.0": {
+      "integrity": "sha512-/K4Rl5BN0OtTiPWmJCdqODu38XnDMsDxKY5rgrPnCkutPTJf2wVbkoixLfealF5Kwse/s8P8M5jAiURiwSwnFA==",
+      "dependencies": [
+        "@codemirror/language",
+        "@codemirror/state",
+        "@codemirror/view",
+        "@lezer/common"
+      ]
+    },
+    "@codemirror/lang-python@6.2.1": {
+      "integrity": "sha512-IRjC8RUBhn9mGR9ywecNhB51yePWCGgvHfY1lWN/Mrp3cKuHr0isDKia+9HnvhiWNnMpbGhWrkhuWOc09exRyw==",
+      "dependencies": [
+        "@codemirror/autocomplete",
+        "@codemirror/language",
+        "@codemirror/state",
+        "@lezer/common",
+        "@lezer/python"
+      ]
+    },
+    "@codemirror/language@6.12.4": {
+      "integrity": "sha512-1q4PaT+o6PbgpkJt4Q8Fv5XJxTy4FUZ4MWETtyiDw3J0Pyr9E2vqcKL+k9wcvjNTIsauxvE7OfmWj3FRPHQ76A==",
+      "dependencies": [
+        "@codemirror/state",
+        "@codemirror/view",
+        "@lezer/common",
+        "@lezer/highlight",
+        "@lezer/lr",
+        "style-mod"
+      ]
+    },
+    "@codemirror/lint@6.9.7": {
+      "integrity": "sha512-28/+iWLYxKxsvGYhSYL7zaCZqLz5+FFFDq9tVsvGv9kv8RY4fFAchJ5WX9M3YrrRlTIsECjsXPqeNgnSmNP2dg==",
+      "dependencies": [
+        "@codemirror/state",
+        "@codemirror/view",
+        "crelt"
+      ]
+    },
+    "@codemirror/search@6.7.1": {
+      "integrity": "sha512-uMe5UO6PamJtSHrXhhHOzSX3ReWtiJrva6GnPMwSOrZtiExb5X5eExhr2OUZQVvdxPsKpY3Ro2mFbQadpPWmHA==",
+      "dependencies": [
+        "@codemirror/state",
+        "@codemirror/view",
+        "crelt"
+      ]
+    },
+    "@codemirror/state@6.7.1": {
+      "integrity": "sha512-9QzNDgE4EYDnAHfrTlR2lwiPciiOymLtwKK+8yHQzCc7GXhAP9xdEbEJFy2IWB1j9UGUl9BsgMmTo/ImA02T7A==",
+      "dependencies": [
+        "@marijn/find-cluster-break"
+      ]
+    },
+    "@codemirror/view@6.43.9": {
+      "integrity": "sha512-sTuUzTpPMFebRhg6dawChoKKgndIwfjmJgKVxBefPElcU2NwQ6AFroupk0SFqEerQyZOGRfDNnSN8Dw/lMAsXw==",
+      "dependencies": [
+        "@codemirror/state",
+        "crelt",
+        "style-mod",
+        "w3c-keyname"
+      ]
+    },
+    "@lezer/common@1.5.2": {
+      "integrity": "sha512-sxQE460fPZyU3sdc8lafxiPwJHBzZRy/udNFynGQky1SePYBdhkBl1kOagA9uT3pxR8K09bOrmTUqA9wb/PjSQ=="
+    },
+    "@lezer/highlight@1.2.3": {
+      "integrity": "sha512-qXdH7UqTvGfdVBINrgKhDsVTJTxactNNxLk7+UMwZhU13lMHaOBlJe9Vqp907ya56Y3+ed2tlqzys7jDkTmW0g==",
+      "dependencies": [
+        "@lezer/common"
+      ]
+    },
+    "@lezer/lr@1.4.10": {
+      "integrity": "sha512-rnCpTIBafOx4mRp43xOxDJbFipJm/c0cia/V5TiGlhmMa+wsSdoGmUN3w5Bqrks/09Q/D4tNAmWaT8p6NRi77A==",
+      "dependencies": [
+        "@lezer/common"
+      ]
+    },
+    "@lezer/python@1.1.19": {
+      "integrity": "sha512-MhQIURHRytsNzP/YXnqpYKW6la6voAH3kyplTOOiCdjyFY6cWWGFVmYVdHIPrElqSDf4iCDktQCockB9FxuhzQ==",
+      "dependencies": [
+        "@lezer/common",
+        "@lezer/highlight",
+        "@lezer/lr"
+      ]
+    },
+    "@marijn/find-cluster-break@1.0.4": {
+      "integrity": "sha512-Wy0V7+SGUjnF9/TkiM1hKVDPj7jKXduPNboMVtHTA8dySMURWqfg/JZ9E2Sq8JgSJmkl7k7Qe9FLeMSrSraWmQ=="
+    },
     "@micropython/micropython-webassembly-pyscript@1.28.0-6": {
       "integrity": "sha512-eRJw+jOhFPoEClHRI8RmzIBjORpOhVdDFcdrNYHUc0U+EwchuD5cYIfmgvj3RWim7vBnjBK8mYxMBBVduOo8Lw=="
     },
@@ -89,6 +189,21 @@
     },
     "@rolldown/pluginutils@1.0.1": {
       "integrity": "sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw=="
+    },
+    "codemirror@6.0.2": {
+      "integrity": "sha512-VhydHotNW5w1UGK0Qj96BwSk/Zqbp9WbnyK2W/eVMv4QyF41INRGpjUhFJY7/uDNuudSc33a/PKr4iDqRduvHw==",
+      "dependencies": [
+        "@codemirror/autocomplete",
+        "@codemirror/commands",
+        "@codemirror/language",
+        "@codemirror/lint",
+        "@codemirror/search",
+        "@codemirror/state",
+        "@codemirror/view"
+      ]
+    },
+    "crelt@1.0.7": {
+      "integrity": "sha512-aK6BbWfhf4U/wCcLHKPJl/xa6VkVstRaPywWtMKGwuOLc/wZTyQYuoxgvZnNsBvv7Kg3YTBQYYBCggcviQczuA=="
     },
     "detect-libc@2.1.2": {
       "integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="
@@ -227,6 +342,9 @@
     "source-map-js@1.2.1": {
       "integrity": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA=="
     },
+    "style-mod@4.1.3": {
+      "integrity": "sha512-i/n8VsZydrugj3Iuzll8+x/00GH2vnYsk1eomD8QiRrSAeW6ItbCQDtfXCeJHd0iwiNagqjQkvpvREEPtW3IoQ=="
+    },
     "tinyglobby@0.2.17": {
       "integrity": "sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==",
       "dependencies": [
@@ -251,12 +369,19 @@
         "fsevents"
       ],
       "bin": true
+    },
+    "w3c-keyname@2.2.8": {
+      "integrity": "sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ=="
     }
   },
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@codemirror/commands@^6.11.0",
+        "npm:@codemirror/lang-python@^6.2.1",
+        "npm:@codemirror/view@^6.43.9",
         "npm:@micropython/micropython-webassembly-pyscript@1.28.0-6",
+        "npm:codemirror@^6.0.2",
         "npm:typescript@~6.0.2",
         "npm:vite@^8.2.0"
       ]

@@ -1,5 +1,12 @@
-// Library
 import { loadMicroPython } from '@micropython/micropython-webassembly-pyscript'
+
+import { EditorView, basicSetup } from "codemirror"
+import { python } from "@codemirror/lang-python"
+
+import { keymap } from "@codemirror/view"
+import { indentWithTab } from "@codemirror/commands"
+
+import "./style.css"
 
 // Initialize MicroPython and setup where to display stdout and stderr
 const micropython = await loadMicroPython({
@@ -7,8 +14,8 @@ const micropython = await loadMicroPython({
   stderr: (text: string) => display(text),
 })
 
-/** The textarea where the user can input Python code */
-const sourceCode = document.getElementById("source-code") as HTMLTextAreaElement
+/** The div where the source code will be entered */
+const sourceCode = document.getElementById("source-code") as HTMLDivElement
 /** The div where the output of the Python code will be displayed */
 const displayOutput = document.getElementById("display-output") as HTMLDivElement
 /** The button to run the Python code */
@@ -20,7 +27,7 @@ runButton.addEventListener("click", runCode)
 /** Executes the Python code entered by the user in the textarea and displays the output in the designated div */
 function runCode() {
   // Get the Python code from the textarea
-  const src = sourceCode.value
+  const src = editor.state.doc.toString()
   if (!src) { return }
 
   clearOutput() // Clear previous output before running new code
@@ -44,10 +51,33 @@ function clearOutput() {
   displayOutput.innerText = ""
 }
 
-// Register event listener for keydown events to allow running the code with Ctrl+Enter or Shift+Enter
-sourceCode.addEventListener('keydown', (event) => {
-  if ((event.ctrlKey || event.shiftKey) && event.key === 'Enter') {
-    event.preventDefault() // Stop the event from propagating to the textarea to prevent adding a new line
-    runCode()
+/** Sets up a keymap extension for the CodeMirror editor, including running the code with "Mod-Enter" and indenting with Tab */
+const keymapExtension = keymap.of([
+  indentWithTab,
+  {
+    key: "Mod-Enter",
+    run: () => {
+      runCode()
+      return true
+    }
   }
+])
+
+/** Sets up a theme extension for the CodeMirror editor to ensure it takes up the full height of its container and allows scrolling */
+const themeExtension = EditorView.theme({
+  "&": { height: `${sourceCode?.parentElement?.clientHeight ?? 0}px` },
+  ".cm-scroller": { overflow: "auto" },
+})
+
+
+/** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
+const editor = new EditorView({
+  doc: '',
+  extensions: [
+    keymapExtension,
+    basicSetup,
+    python(),
+    themeExtension,
+  ],
+  parent: sourceCode
 })
