@@ -21,10 +21,15 @@ runButton.addEventListener("click", runCode)
 function runCode() {
   const src = sourceCode.value
   if (!src) { return }
+  clearOutput()
   micropython.runPython(src)
 }
 
 /** Displays the given text in the designated output div */
 function display(text: string) {
-  displayOutput.innerText = text
+  displayOutput.innerText += text
+}
+
+function clearOutput() {
+  displayOutput.innerText = ""
 }
