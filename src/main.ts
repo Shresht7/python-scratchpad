@@ -31,6 +31,14 @@ const toggleLayoutButton = document.getElementById('toggle-layout') as HTMLButto
 /** The button to run the Python code */
 const runButton = document.getElementById("run-button") as HTMLButtonElement
 
+/** Returns the platform-appropriate modifier key label */
+function getModifierKey(): string {
+  return navigator.platform.includes('Mac') ? 'Cmd' : 'Ctrl'
+}
+
+// Set the tooltip with platform-specific modifier key
+runButton.title = `Run (${getModifierKey()}+Enter)`
+
 // Register event listener for the run button to execute the Python code and display the output
 runButton.addEventListener("click", runCode)
 
