@@ -109,6 +109,7 @@ toggleLayoutButton.addEventListener('click', toggleLayout)
 const themeExtension = EditorView.theme({
   "&": { height: "100%", position: 'relative' },
   ".cm-scroller": { overflow: "auto", position: 'absolute', inset: 0 },
+  ".cm-lineNumbers": { minWidth: "3ch" },
 })
 
 const themeCompartment = new Compartment()
