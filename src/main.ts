@@ -9,7 +9,7 @@ import { themes, type ThemeId, type ThemePalette } from './themes'
 
 import "./style.css"
 
-import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check } from 'lucide'
+import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check, Square } from 'lucide'
 
 import type { WorkerToMain } from "./worker"
 
@@ -20,7 +20,8 @@ createIcons({
     PanelRight,
     Trash2,
     Copy,
-    Check
+    Check,
+    Square
   }
 })
 
@@ -84,6 +85,9 @@ const toggleLayoutButton = document.getElementById('toggle-layout') as HTMLButto
 /** The button to run the Python code */
 const runButton = document.getElementById("run-button") as HTMLButtonElement
 
+/** The label inside the run/stop button */
+const runLabel = document.getElementById("run-label") as HTMLSpanElement
+
 /** Returns the platform-appropriate modifier key label */
 function getModifierKey(): string {
   return navigator.platform.includes('Mac') ? 'Cmd' : 'Ctrl'
@@ -95,15 +99,17 @@ runButton.title = `Run (${getModifierKey()}+Enter)`
 // Register event listener for the run button to execute the Python code and display the output
 runButton.addEventListener("click", runCode)
 
-/** Updates the state of the run button based on whether the worker is ready and whether code is currently running */
+/** Updates the state of the run button based on whether the code is executing */
 function updateRunButtonState() {
-  runButton.disabled = !workerIsReady || workerIsRunning
+  runButton.disabled = !workerIsReady
   if (workerIsRunning) {
     runButton.classList.add('running')
     runButton.title = 'Running...'
+    runLabel.textContent = 'Stop Execution'
   } else {
     runButton.classList.remove('running')
     runButton.title = `Run (${getModifierKey()}+Enter)`
+    runLabel.textContent = 'Run'
   }
 }
 
@@ -166,10 +172,12 @@ function runCode() {
 }
 
 /** Displays the given text in the designated output div */
-function display(text: string, isError = false) {
+function display(text: string, isError = false, isMuted = false) {
   const span = document.createElement('span')
   if (isError) {
     span.className = 'output-error'
+  } else if (isMuted) {
+    span.className = 'output-muted'
   }
   span.textContent = text + '\n'
   displayOutput.appendChild(span)
