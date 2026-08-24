@@ -13,6 +13,8 @@ import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check, Square
 
 import type { WorkerToMain } from "./worker"
 
+import { writeCodeToHash, HASH_UPDATE_DEBOUNCE_MS } from "./share"
+
 createIcons({
   icons: {
     Play,
@@ -326,6 +328,16 @@ function applyThemePalette(theme: { palette: ThemePalette; dark: boolean }) {
 
 applyThemePalette(initialTheme)
 
+/** Pending hash update timer */
+let hashUpdateTimer: number | undefined
+
+const hashUpdateExtension = EditorView.updateListener.of((update) => {
+  if (!update.docChanged) { return }
+  window.clearTimeout(hashUpdateTimer)
+  hashUpdateTimer = window.setTimeout(writeCodeToHash, HASH_UPDATE_DEBOUNCE_MS, update.state.doc.toString())
+})
+
+
 /** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
 const editor = new EditorView({
   doc: '',
@@ -334,7 +346,8 @@ const editor = new EditorView({
     basicSetup,
     python(),
     themeExtension,
-    themeCompartment.of(initialTheme.extension)
+    themeCompartment.of(initialTheme.extension),
+    hashUpdateExtension
   ],
   parent: sourceCode
 })
