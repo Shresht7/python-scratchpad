@@ -185,6 +185,19 @@ main {
   }
 }
 
+.layout-vertical,
+.layout-horizontal {
+  display: none;
+}
+
+:has(main[data-layout="vertical"]) .layout-vertical {
+  display: block;
+}
+
+:has(main[data-layout="horizontal"]) .layout-horizontal {
+  display: block;
+}
+
 footer {
   --font-size-small: 0.75rem;
   font-size: var(--font-size-small);
