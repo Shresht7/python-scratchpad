@@ -286,7 +286,6 @@ section#output {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding: 0.75rem;
   color: var(--theme-foreground);
 }
 
@@ -299,6 +298,36 @@ section#output {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  padding: 0.75rem;
+}
+
+/* Scrollbars shared between the editor and the output pane, themed via --theme-* */
+.cm-scroller,
+#display-output {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-muted) transparent;
+}
+
+.cm-scroller::-webkit-scrollbar,
+#display-output::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.cm-scroller::-webkit-scrollbar-track,
+#display-output::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--theme-border) 35%, transparent);
+}
+
+.cm-scroller::-webkit-scrollbar-thumb,
+#display-output::-webkit-scrollbar-thumb {
+  background-color: var(--theme-muted);
+  border-radius: 4px;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb:hover,
+#display-output::-webkit-scrollbar-thumb:hover {
+  background-color: var(--theme-foreground);
 }
 
 .icon {
