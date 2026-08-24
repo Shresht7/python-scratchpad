@@ -25,7 +25,50 @@ createIcons({
   }
 })
 
-const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })
+/** Creates a MicroPython worker and wires up its message handling */
+function createWorker(): Worker {
+  const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })
+
+  worker.addEventListener('message', (event: MessageEvent<WorkerToMain>) => {
+    const message = event.data
+    switch (message.type) {
+      case 'ready':
+        workerIsReady = true
+        updateRunButtonState()
+        break
+      case 'stdout':
+        display(message.text)
+        break
+      case 'stderr':
+        display(message.text, true)
+        break
+      case 'done':
+        if (message.id === runId) {
+          workerIsRunning = false
+          updateRunButtonState()
+        }
+        break
+      case 'error':
+        if (message.id === runId) {
+          workerIsRunning = false
+          updateRunButtonState()
+          display(`Error: ${message.message}`, true)
+        }
+        break
+    }
+  })
+
+  // If the worker itself fails to load, surface it instead of failing silently
+  worker.addEventListener('error', (event) => {
+    display(`Interpreter failed to load. Try reloading the page. Error: ${event.message}`, true)
+    console.error(event)
+  })
+
+  return worker
+}
+
+/** The worker that runs the MicroPython interpreter in a separate thread */
+let worker = createWorker()
 
 /** Whether the interpreter has finished loading and can accept code */
 let workerIsReady = false
@@ -35,41 +78,6 @@ let workerIsRunning = false
 
 /** Monotonic id assigned to each run request */
 let runId = 0
-
-worker.addEventListener('message', (event: MessageEvent<WorkerToMain>) => {
-  const message = event.data
-  switch (message.type) {
-    case 'ready':
-      workerIsReady = true
-      updateRunButtonState()
-      break
-    case 'stdout':
-      display(message.text)
-      break
-    case 'stderr':
-      display(message.text, true)
-      break
-    case 'done':
-      if (message.id === runId) {
-        workerIsRunning = false
-        updateRunButtonState()
-      }
-      break
-    case 'error':
-      if (message.id === runId) {
-        workerIsRunning = false
-        updateRunButtonState()
-        display(`Error: ${message.message}`, true)
-      }
-      break
-  }
-})
-
-// If the worker itself fails to load, surface it instead of failing silently
-worker.addEventListener('error', (event) => {
-  display(`Interpreter failed to load. Try reloading the page. Error: ${event.message}`, true)
-  console.error(event)
-})
 
 /** The main element that contains the source code input and output display */
 const main = document.getElementsByTagName('main')[0]
@@ -97,15 +105,21 @@ function getModifierKey(): string {
 runButton.title = `Run (${getModifierKey()}+Enter)`
 
 // Register event listener for the run button to execute the Python code and display the output
-runButton.addEventListener("click", runCode)
+runButton.addEventListener("click", () => {
+  if (workerIsRunning) {
+    stopExecution()
+  } else {
+    runCode()
+  }
+})
 
 /** Updates the state of the run button based on whether the code is executing */
 function updateRunButtonState() {
   runButton.disabled = !workerIsReady
   if (workerIsRunning) {
     runButton.classList.add('running')
-    runButton.title = 'Running...'
-    runLabel.textContent = 'Stop Execution'
+    runButton.title = 'Stop Execution'
+    runLabel.textContent = 'Stop'
   } else {
     runButton.classList.remove('running')
     runButton.title = `Run (${getModifierKey()}+Enter)`
@@ -169,6 +183,18 @@ function runCode() {
 
   // Send a message to the worker to run the Python code
   worker.postMessage({ type: 'run', id: ++runId, src })
+}
+
+/** Terminates the worker to interrupt any running code and starts a fresh interpreter */
+function stopExecution() {
+  worker.terminate()
+
+  display('Execution stopped. Interpreter state has been reset.', false, true)
+
+  workerIsReady = false
+  workerIsRunning = false
+  worker = createWorker()
+  updateRunButtonState()
 }
 
 /** Displays the given text in the designated output div */
