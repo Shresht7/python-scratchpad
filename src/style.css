@@ -283,6 +283,9 @@ section#code {
 }
 
 section#output {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   padding: 0.75rem;
   color: var(--theme-foreground);
 }
@@ -293,6 +296,9 @@ section#output {
 
 #display-output {
   white-space: pre-wrap;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .icon {
