@@ -193,22 +193,59 @@ section#actions-toolbar {
 }
 
 main {
+  --panel-split: 66.67%;
+
   height: 100%;
   min-height: 0;
 
   display: grid;
-  grid-template-rows: 2fr 1fr;
+  grid-template-rows: var(--panel-split) var(--gap-05) minmax(0, 1fr);
   grid-template-columns: none;
-  gap: var(--gap-05);
+  /* gap: var(--gap-05); */
+
+  #divider {
+    position: relative;
+    touch-action: none;
+
+    &::after {
+      width: 100%;
+      height: 100%;
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--theme-muted);
+      border-radius: 2px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    &:hover::after {
+      opacity: 1;
+    }
+  }
 
   &[data-layout="vertical"] {
-    grid-template-rows: 2fr 1fr;
+    grid-template-rows: var(--panel-split) var(--gap-05) minmax(0, 1fr);
     grid-template-columns: none;
+
+    & #divider {
+      height: calc(var(--gap-05) * 0.8);
+      width: 100%;
+      cursor: row-resize;
+    }
   }
 
   &[data-layout="horizontal"] {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: var(--panel-split) var(--gap-05) minmax(0, 1fr);
     grid-template-rows: none;
+
+    & #divider {
+      width: calc(var(--gap-05) * 0.8);
+      height: 100%;
+      cursor: col-resize;
+    }
   }
 }
 
