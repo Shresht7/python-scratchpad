@@ -414,3 +414,9 @@ function finishDrag() {
 
 divider.addEventListener('pointerup', finishDrag)
 divider.addEventListener('pointercancel', finishDrag)
+
+// Reset the panel split to its default when the divider is double-clicked
+divider.addEventListener('dblclick', () => {
+  applySplit(SPLIT_DEFAULT)
+  saveSplit(main.getAttribute('data-layout') as 'horizontal' | 'vertical', SPLIT_DEFAULT)
+})
