@@ -16,6 +16,10 @@
       <h1 id="title">Python Scratchpad</h1>
     </div>
     <section id="actions-toolbar">
+      <button id="clear-output" title="Clear output">
+        <i data-lucide="trash-2"></i>
+        Clear
+      </button>
       <button id="run-button" class="primary" title="Run (Mod+Enter)">
         <i data-lucide="play"></i>
         Run
@@ -26,10 +30,18 @@
   <main>
 
     <section id="code">
+      <button id="copy-code" class="panel-action" title="Copy code" aria-label="Copy code">
+        <i data-lucide="copy"></i>
+        <i data-lucide="check"></i>
+      </button>
       <div id="source-code"></div>
     </section>
 
     <section id="output">
+      <button id="copy-output" class="panel-action" title="Copy output" aria-label="Copy output">
+        <i data-lucide="copy"></i>
+        <i data-lucide="check"></i>
+      </button>
       <div id="display-output"></div>
     </section>
 

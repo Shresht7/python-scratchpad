@@ -215,10 +215,31 @@ footer {
 
 section#code,
 section#output {
+  position: relative;
   width: 100%;
   border: var(--border-thickness) solid var(--theme-border);
   border-radius: var(--border-radius);
   background-color: var(--theme-surface);
+}
+
+.panel-action {
+  position: absolute;
+  top: var(--gap-05);
+  right: var(--gap-05);
+  z-index: 10;
+  padding: 0.25rem;
+}
+
+.panel-action svg[data-lucide="check"] {
+  display: none;
+}
+
+.panel-action.copied svg[data-lucide="copy"] {
+  display: none;
+}
+
+.panel-action.copied svg[data-lucide="check"] {
+  display: block;
 }
 
 #source-code {
