@@ -8,6 +8,7 @@ declare module "@micropython/micropython-webassembly-pyscript" {
     export interface LoadMicroPythonOptions {
         stdout?: (text: string) => void;
         stderr?: (text: string) => void;
+        url?: string;
     }
 
 }

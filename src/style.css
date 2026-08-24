@@ -165,6 +165,33 @@ section#actions-toolbar {
   gap: var(--gap-05);
 }
 
+#run-button svg[data-lucide="square"] {
+  display: none;
+}
+
+#run-button.running svg[data-lucide="play"] {
+  display: none;
+}
+
+#run-button.running svg[data-lucide="square"] {
+  display: block;
+}
+
+#run-button.running {
+  background-color: var(--theme-error);
+  border-color: var(--theme-error);
+  color: #fff;
+}
+
+#run-button.running:hover {
+  background-color: color-mix(in srgb, var(--theme-error) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-error) 85%, black);
+}
+
+.output-muted {
+  color: var(--theme-muted);
+}
+
 main {
   height: 100%;
   min-height: 0;

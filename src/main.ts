@@ -1,5 +1,3 @@
-import { loadMicroPython } from '@micropython/micropython-webassembly-pyscript'
-
 import { EditorView, basicSetup } from "codemirror"
 import { python } from "@codemirror/lang-python"
 
@@ -11,7 +9,9 @@ import { themes, type ThemeId, type ThemePalette } from './themes'
 
 import "./style.css"
 
-import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check } from 'lucide'
+import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check, Square } from 'lucide'
+
+import type { WorkerToMain } from "./worker"
 
 createIcons({
   icons: {
@@ -20,15 +20,64 @@ createIcons({
     PanelRight,
     Trash2,
     Copy,
-    Check
+    Check,
+    Square
   }
 })
 
-// Initialize MicroPython and setup where to display stdout and stderr
-const micropython = await loadMicroPython({
-  stdout: (text: string) => display(text, false),
-  stderr: (text: string) => display(text, true),
-})
+/** Creates a MicroPython worker and wires up its message handling */
+function createWorker(): Worker {
+  const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })
+
+  worker.addEventListener('message', (event: MessageEvent<WorkerToMain>) => {
+    const message = event.data
+    switch (message.type) {
+      case 'ready':
+        workerIsReady = true
+        updateRunButtonState()
+        break
+      case 'stdout':
+        display(message.text)
+        break
+      case 'stderr':
+        display(message.text, true)
+        break
+      case 'done':
+        if (message.id === runId) {
+          workerIsRunning = false
+          updateRunButtonState()
+        }
+        break
+      case 'error':
+        if (message.id === runId) {
+          workerIsRunning = false
+          updateRunButtonState()
+          display(`Error: ${message.message}`, true)
+        }
+        break
+    }
+  })
+
+  // If the worker itself fails to load, surface it instead of failing silently
+  worker.addEventListener('error', (event) => {
+    display(`Interpreter failed to load. Try reloading the page. Error: ${event.message}`, true)
+    console.error(event)
+  })
+
+  return worker
+}
+
+/** The worker that runs the MicroPython interpreter in a separate thread */
+let worker = createWorker()
+
+/** Whether the interpreter has finished loading and can accept code */
+let workerIsReady = false
+
+/** Whether Python code is currently executing */
+let workerIsRunning = false
+
+/** Monotonic id assigned to each run request */
+let runId = 0
 
 /** The main element that contains the source code input and output display */
 const main = document.getElementsByTagName('main')[0]
@@ -44,6 +93,9 @@ const toggleLayoutButton = document.getElementById('toggle-layout') as HTMLButto
 /** The button to run the Python code */
 const runButton = document.getElementById("run-button") as HTMLButtonElement
 
+/** The label inside the run/stop button */
+const runLabel = document.getElementById("run-label") as HTMLSpanElement
+
 /** Returns the platform-appropriate modifier key label */
 function getModifierKey(): string {
   return navigator.platform.includes('Mac') ? 'Cmd' : 'Ctrl'
@@ -53,7 +105,29 @@ function getModifierKey(): string {
 runButton.title = `Run (${getModifierKey()}+Enter)`
 
 // Register event listener for the run button to execute the Python code and display the output
-runButton.addEventListener("click", runCode)
+runButton.addEventListener("click", () => {
+  if (workerIsRunning) {
+    stopExecution()
+  } else {
+    runCode()
+  }
+})
+
+/** Updates the state of the run button based on whether the code is executing */
+function updateRunButtonState() {
+  runButton.disabled = !workerIsReady
+  if (workerIsRunning) {
+    runButton.classList.add('running')
+    runButton.title = 'Stop Execution'
+    runLabel.textContent = 'Stop'
+  } else {
+    runButton.classList.remove('running')
+    runButton.title = `Run (${getModifierKey()}+Enter)`
+    runLabel.textContent = 'Run'
+  }
+}
+
+updateRunButtonState() // Initial state of the run button
 
 /** The button to clear the output display */
 const clearButton = document.getElementById("clear-output") as HTMLButtonElement
@@ -95,26 +169,41 @@ copyOutputButton.addEventListener("click", () => copyText(displayOutput.innerTex
 
 /** Executes the Python code entered by the user in the textarea and displays the output in the designated div */
 function runCode() {
+  if (!workerIsReady || workerIsRunning) { return }
+
   // Get the Python code from the textarea
   const src = editor.state.doc.toString()
   if (!src) { return }
 
   clearOutput() // Clear previous output before running new code
 
-  // Run the Python code using the MicroPython instance and handle any errors that may occur
-  try {
-    micropython.runPython(src)
-  } catch (error) {
-    console.error(error)
-    display(`Error: ${error}`, true)
-  }
+  // Mark that the worker is now running code and update the run button state
+  workerIsRunning = true
+  updateRunButtonState()
+
+  // Send a message to the worker to run the Python code
+  worker.postMessage({ type: 'run', id: ++runId, src })
+}
+
+/** Terminates the worker to interrupt any running code and starts a fresh interpreter */
+function stopExecution() {
+  worker.terminate()
+
+  display('Execution stopped. Interpreter state has been reset.', false, true)
+
+  workerIsReady = false
+  workerIsRunning = false
+  worker = createWorker()
+  updateRunButtonState()
 }
 
 /** Displays the given text in the designated output div */
-function display(text: string, isError = false) {
+function display(text: string, isError = false, isMuted = false) {
   const span = document.createElement('span')
   if (isError) {
     span.className = 'output-error'
+  } else if (isMuted) {
+    span.className = 'output-muted'
   }
   span.textContent = text + '\n'
   displayOutput.appendChild(span)
