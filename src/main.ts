@@ -206,6 +206,9 @@ const editor = new EditorView({
   parent: sourceCode
 })
 
+// Focus the editor as soon as it is ready for immediate typing
+editor.focus()
+
 // Populate Theme Selection Dropdown
 const themeSelect = document.getElementById('theme-select') as HTMLSelectElement
 
