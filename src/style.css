@@ -114,6 +114,11 @@ button:disabled {
   cursor: not-allowed;
 }
 
+svg[data-lucide] {
+  width: 1.2em;
+  height: 1.2em;
+}
+
 select {
   font-family: inherit;
   font-size: 0.875rem;

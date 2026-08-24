@@ -11,6 +11,18 @@ import { themes, type ThemeId, type ThemePalette } from './themes'
 
 import "./style.css"
 
+import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy } from 'lucide'
+
+createIcons({
+  icons: {
+    Play,
+    PanelBottom,
+    PanelRight,
+    Trash2,
+    Copy
+  }
+})
+
 // Initialize MicroPython and setup where to display stdout and stderr
 const micropython = await loadMicroPython({
   stdout: (text: string) => display(text, false),
