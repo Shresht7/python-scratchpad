@@ -55,6 +55,11 @@ body {
   font-size: var(--font-size, 1rem);
   color: var(--theme-foreground);
   background-color: var(--theme-background);
+
+  /* Prevent text selection while dragging the divider */
+  &.dragging {
+    user-select: none;
+  }
 }
 
 [data-theme="dark"] {
