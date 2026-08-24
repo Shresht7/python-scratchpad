@@ -21,3 +21,15 @@ export function writeCodeToHash(code: string) {
         history.replaceState(null, '', location.pathname + location.search)
     }
 }
+
+/** Decodes a base64url hash fragment back into source code, returning null if it is malformed */
+export function decodeHashFragmentToCode(hashFragment: string): string | null {
+    try {
+        const base64 = hashFragment.replaceAll('-', '+').replaceAll('_', '/')
+        const binary = atob(base64)
+        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0))
+        return new TextDecoder().decode(bytes)
+    } catch {
+        return null
+    }
+}

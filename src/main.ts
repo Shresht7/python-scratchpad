@@ -13,7 +13,7 @@ import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check, Square
 
 import type { WorkerToMain } from "./worker"
 
-import { writeCodeToHash, HASH_UPDATE_DEBOUNCE_MS } from "./share"
+import { writeCodeToHash, decodeHashFragmentToCode, HASH_UPDATE_DEBOUNCE_MS } from "./share"
 
 createIcons({
   icons: {
@@ -331,6 +331,22 @@ applyThemePalette(initialTheme)
 /** Pending hash update timer */
 let hashUpdateTimer: number | undefined
 
+/** The initial editor contents, restored from a shared link fragment if present */
+let initialCode = ''
+
+// Restore code from the URL hash if this is a shared link
+const codeHashMatch = location.hash.match(/#code=([^&]+)/)
+if (codeHashMatch) {
+  const decoded = decodeHashFragmentToCode(codeHashMatch[1])
+  if (decoded === null) {
+    console.warn('Malformed code hash in URL - ignoring')
+    display('Warning: Malformed code hash in URL - ignoring', true, true)
+    history.replaceState(null, '', location.pathname + location.search) // Remove the malformed hash from the URL
+  } else {
+    initialCode = decoded
+  }
+}
+
 const hashUpdateExtension = EditorView.updateListener.of((update) => {
   if (!update.docChanged) { return }
   window.clearTimeout(hashUpdateTimer)
@@ -340,7 +356,7 @@ const hashUpdateExtension = EditorView.updateListener.of((update) => {
 
 /** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
 const editor = new EditorView({
-  doc: '',
+  doc: initialCode,
   extensions: [
     keymapExtension,
     basicSetup,
