@@ -66,3 +66,19 @@ export function restoreCodeFromHash(): HashRestoreResult {
     }
     return { code: decoded, warning: null }
 }
+
+// SHARE BUTTON
+// ------------
+
+/** The button that copies the current URL to the clipboard */
+const shareButton = document.getElementById('share-button') as HTMLButtonElement
+
+// Copy the current page URL to the clipboard and show a toast
+shareButton.addEventListener('click', async () => {
+    try {
+        await navigator.clipboard.writeText(location.href)
+        showToast('URL copied to clipboard')
+    } catch {
+        showToast('Failed to copy URL')
+    }
+})
