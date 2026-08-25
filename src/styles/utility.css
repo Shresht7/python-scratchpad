@@ -17,3 +17,18 @@
 .muted {
     color: var(--theme-muted);
 }
+
+.gap-wide {
+    gap: 1.5rem;
+}
+
+.gap-inline {
+    gap: 0.375rem;
+    align-items: center;
+}
+
+.inline-flex {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
