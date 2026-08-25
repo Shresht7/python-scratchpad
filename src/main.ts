@@ -13,7 +13,7 @@ import type { WorkerToMain } from "./worker"
 
 import { writeCodeToHash, decodeHashFragmentToCode, HASH_UPDATE_DEBOUNCE_MS } from "./share"
 
-import './modules/icons'
+import './ui/icons'
 
 /** Creates a MicroPython worker and wires up its message handling */
 function createWorker(): Worker {
