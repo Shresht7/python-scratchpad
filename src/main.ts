@@ -13,6 +13,8 @@ import type { WorkerToMain } from "./service/worker"
 
 import { writeCodeToHash, decodeHashFragmentToCode, HASH_UPDATE_DEBOUNCE_MS } from "./modules/share"
 
+import * as output from './ui/output'
+
 import './ui/icons'
 
 /** Creates a MicroPython worker and wires up its message handling */
@@ -27,10 +29,10 @@ function createWorker(): Worker {
         updateRunButtonState()
         break
       case 'stdout':
-        display(message.text)
+        output.display(message.text)
         break
       case 'stderr':
-        display(message.text, true)
+        output.display(message.text, { isError: true })
         break
       case 'done':
         if (message.id === runId) {
@@ -42,7 +44,7 @@ function createWorker(): Worker {
         if (message.id === runId) {
           workerIsRunning = false
           updateRunButtonState()
-          display(`Error: ${message.message}`, true)
+          output.display(`Error: ${message.message}`, { isError: true })
         }
         break
     }
@@ -50,7 +52,7 @@ function createWorker(): Worker {
 
   // If the worker itself fails to load, surface it instead of failing silently
   worker.addEventListener('error', (event) => {
-    display(`Interpreter failed to load. Try reloading the page. Error: ${event.message}`, true)
+    output.display(`Interpreter failed to load. Try reloading the page. Error: ${event.message}`, { isError: true })
     console.error(event)
   })
 
@@ -74,8 +76,6 @@ const main = document.getElementsByTagName('main')[0]
 
 /** The div where the source code will be entered */
 const sourceCode = document.getElementById("source-code") as HTMLDivElement
-/** The div where the output of the Python code will be displayed */
-const displayOutput = document.getElementById("display-output") as HTMLDivElement
 
 /** The draggable divider between the code and the output panels */
 const divider = document.getElementById("divider") as HTMLDivElement
@@ -126,7 +126,7 @@ updateRunButtonState() // Initial state of the run button
 const clearButton = document.getElementById("clear-output") as HTMLButtonElement
 
 // Register event listener for the clear button to empty the output display
-clearButton.addEventListener("click", clearOutput)
+clearButton.addEventListener("click", output.clear)
 
 /** The buttons to copy the source code and the output to the clipboard */
 const copyCodeButton = document.getElementById("copy-code") as HTMLButtonElement
@@ -190,7 +190,7 @@ async function copyText(text: string, button: HTMLButtonElement) {
 
 // Register event listeners for the copy buttons to copy the source code and the output respectively
 copyCodeButton.addEventListener("click", () => copyText(editor.state.doc.toString(), copyCodeButton))
-copyOutputButton.addEventListener("click", () => copyText(displayOutput.innerText, copyOutputButton))
+copyOutputButton.addEventListener("click", () => copyText(output.getText(), copyOutputButton))
 
 /** Executes the Python code entered by the user in the textarea and displays the output in the designated div */
 function runCode() {
@@ -200,7 +200,7 @@ function runCode() {
   const src = editor.state.doc.toString()
   if (!src) { return }
 
-  clearOutput() // Clear previous output before running new code
+  output.clear() // Clear previous output before running new code
 
   // Mark that the worker is now running code and update the run button state
   workerIsRunning = true
@@ -214,29 +214,12 @@ function runCode() {
 function stopExecution() {
   worker.terminate()
 
-  display('Execution stopped. Interpreter state has been reset.', false, true)
+  output.display('Execution stopped. Interpreter state has been reset.', { isMuted: true })
 
   workerIsReady = false
   workerIsRunning = false
   worker = createWorker()
   updateRunButtonState()
-}
-
-/** Displays the given text in the designated output div */
-function display(text: string, isError = false, isMuted = false) {
-  const span = document.createElement('span')
-  if (isError) {
-    span.className = 'output-error'
-  } else if (isMuted) {
-    span.className = 'output-muted'
-  }
-  span.textContent = text + '\n'
-  displayOutput.appendChild(span)
-}
-
-/** Clears the output div to remove any previous output */
-function clearOutput() {
-  displayOutput.innerText = ""
 }
 
 /** Sets up a keymap extension for the CodeMirror editor, including running the code with "Mod-Enter"/"Shift-Enter" and indenting with Tab */
@@ -328,7 +311,7 @@ if (codeHashMatch) {
   const decoded = decodeHashFragmentToCode(codeHashMatch[1])
   if (decoded === null) {
     console.warn('Malformed code hash in URL - ignoring')
-    display('Warning: Malformed code hash in URL - ignoring', true, true)
+    output.display('Warning: Malformed code hash in URL - ignoring', { isError: true, isMuted: true })
     history.replaceState(null, '', location.pathname + location.search) // Remove the malformed hash from the URL
   } else {
     initialCode = decoded
