@@ -1,13 +1,19 @@
+import { showToast } from '../ui/toast'
+
 /** How long the copied checkmark feedback stays visible on a copy button */
 const COPY_FEEDBACK_MS = 1000
 
 /** Copies the given text to the clipboard and briefly swaps the button's icon to a checkmark */
-export async function copyText(text: string, button: HTMLButtonElement) {
+export async function copyText(text: string, button: HTMLButtonElement, options?: { toast?: string }) {
   try {
     await navigator.clipboard.writeText(text)
   } catch (error) {
     console.error(error)
     return
+  }
+
+  if (options?.toast) {
+    showToast(options.toast)
   }
 
   button.classList.add('copied')
