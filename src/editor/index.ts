@@ -71,6 +71,11 @@ export function createEditor(initialDoc: string, initialTheme: Extension): Edito
   return editor
 }
 
+/** Returns the current contents of the editor */
+export function getEditorContents(): string {
+  return editor.state.doc.toString()
+}
+
 /** Reconfigures the editor's syntax theme without touching the rest of the layout */
 export function setEditorTheme(theme: Extension): void {
   editor.dispatch({ effects: themeCompartment.reconfigure(theme) })
