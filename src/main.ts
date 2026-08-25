@@ -17,7 +17,7 @@ import './ui/icons'
 
 /** Creates a MicroPython worker and wires up its message handling */
 function createWorker(): Worker {
-  const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })
+  const worker = new Worker(new URL('./service/worker.ts', import.meta.url), { type: 'module' })
 
   worker.addEventListener('message', (event: MessageEvent<WorkerToMain>) => {
     const message = event.data
