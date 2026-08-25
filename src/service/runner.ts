@@ -5,6 +5,12 @@ import type { WorkerToMain } from './worker'
 // CREATE WORKER
 // -------------
 
+/** Maximum time (ms) a single execution is allowed to run before being auto-terminated */
+const RUN_TIMEOUT_MS = 10_000
+
+/** Maximum code size (bytes) to send to the worker to prevent memory exhaustion */
+const MAX_CODE_SIZE = 500_000
+
 /** Creates a MicroPython worker and wires up its message handling */
 function createWorker(): Worker {
     const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })
@@ -24,12 +30,14 @@ function createWorker(): Worker {
                 break
             case 'done':
                 if (message.id === runId) {
+                    clearRunTimeout()
                     workerIsRunning = false
                     updateRunButtonState()
                 }
                 break
             case 'error':
                 if (message.id === runId) {
+                    clearRunTimeout()
                     workerIsRunning = false
                     updateRunButtonState()
                     output.display(`Error: ${message.message}`, { isError: true })
@@ -62,6 +70,17 @@ let workerIsRunning = false
 
 /** Monotonic id assigned to each run request */
 let runId = 0
+
+/** Handle for the execution timeout timer */
+let timeoutTimer: number | undefined
+
+/** Clears the execution timeout timer if one is active */
+function clearRunTimeout() {
+    if (timeoutTimer !== undefined) {
+        window.clearTimeout(timeoutTimer)
+        timeoutTimer = undefined
+    }
+}
 
 /** Source-code provider, injected so that runner never needs to know about the editor */
 let getSource: () => string = () => ''
@@ -110,6 +129,12 @@ export function runCode() {
     const src = getSource()
     if (!src) { return }
 
+    // Reject code that exceeds the size limit
+    if (src.length > MAX_CODE_SIZE) {
+        output.display(`Code exceeds ${MAX_CODE_SIZE / 1000}KB limit`, { isError: true })
+        return
+    }
+
     output.clear() // Clear previous output before running new code
 
     // Mark that the worker is now running code and update the run button state
@@ -118,10 +143,17 @@ export function runCode() {
 
     // Send a message to the worker to run the Python code
     worker.postMessage({ type: 'run', id: ++runId, src })
+
+    // Auto-terminate if execution exceeds the time limit
+    timeoutTimer = window.setTimeout(() => {
+        output.display(`Execution timed out after ${RUN_TIMEOUT_MS / 1000}s`, { isMuted: true })
+        stopExecution()
+    }, RUN_TIMEOUT_MS)
 }
 
 /** Terminates the worker to interrupt any running code and starts a fresh interpreter */
 export function stopExecution() {
+    clearRunTimeout()
     worker.terminate()
 
     output.display('Execution stopped. Interpreter state has been reset.', { isMuted: true })
