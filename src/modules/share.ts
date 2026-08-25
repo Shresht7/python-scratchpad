@@ -1,3 +1,5 @@
+import { display } from '../ui/output'
+
 /** How long to wait after the last edit before updating the URL hash (in milliseconds) */
 export const HASH_UPDATE_DEBOUNCE_MS = 500
 
@@ -32,4 +34,18 @@ export function decodeHashFragmentToCode(hashFragment: string): string | null {
     } catch {
         return null
     }
+}
+
+/** Restores the editor contents from a shared URL hash fragment, showing a warning if malformed */
+export function restoreCodeFromHash(): string {
+    const match = location.hash.match(/#code=([^&]+)/)
+    if (!match) return ''
+    const decoded = decodeHashFragmentToCode(match[1])
+    if (decoded === null) {
+        console.warn('Malformed code hash in URL - ignoring')
+        display('Warning: Malformed code hash in URL - ignoring', { isError: true, isMuted: true })
+        history.replaceState(null, '', location.pathname + location.search)
+        return ''
+    }
+    return decoded
 }
