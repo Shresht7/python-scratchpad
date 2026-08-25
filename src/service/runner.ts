@@ -110,7 +110,10 @@ runButton.addEventListener("click", () => {
 /** Updates the state of the run button based on whether the code is executing */
 function updateRunButtonState() {
     runButton.disabled = !workerIsReady
-    if (workerIsRunning) {
+    if (!workerIsReady) {
+        runButton.title = 'Loading interpreter…'
+        runLabel.textContent = 'Loading…'
+    } else if (workerIsRunning) {
         runButton.classList.add('running')
         runButton.title = 'Stop Execution'
         runLabel.textContent = 'Stop'
