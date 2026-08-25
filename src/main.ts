@@ -3,7 +3,8 @@ import { initializeRunner } from './service/runner'
 
 import './ui/icons'
 import './ui/layout'
-import { getText, display } from './ui/output'
+import { getText } from './ui/output'
+import { showToast } from './ui/toast'
 import { copyText } from './modules/copy'
 import './modules/clear'
 import { initializeThemePicker } from './ui/theme-picker'
@@ -36,5 +37,5 @@ initializeRunner(() => editor.getContents())
 
 // Show any hash restore warning after the runner is ready
 if (hashWarning) {
-  display(hashWarning, { isError: true, isMuted: true })
+  showToast(hashWarning)
 }
