@@ -6,6 +6,7 @@ import {
   vsCodeDark,
   nord,
 } from '@fsegurai/codemirror-theme-bundle'
+import type { Extension } from '@codemirror/state'
 
 /** The color palette for a theme, defining various UI colors such as background, foreground, accent, and more */
 export interface ThemePalette {
@@ -26,7 +27,7 @@ export interface ThemePalette {
 export interface Theme {
   id: string
   label: string
-  extension: any
+  extension: Extension
   dark: boolean
   palette: ThemePalette
 }
