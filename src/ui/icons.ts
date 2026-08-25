@@ -1,4 +1,4 @@
-import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check, Square, Link2, Info } from 'lucide'
+import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check, Square, Link2, Info, Palette } from 'lucide'
 
 createIcons({
     icons: {
@@ -10,6 +10,7 @@ createIcons({
         Check,
         Square,
         Link2,
-        Info
+        Info,
+        Palette
     }
 })
