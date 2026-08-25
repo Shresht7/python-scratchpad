@@ -5,7 +5,6 @@ import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
 import { Compartment } from "@codemirror/state"
-import { themes, type ThemeId, type ThemePalette } from './ui/themes'
 
 import "./style.css"
 
@@ -17,6 +16,8 @@ import { runCode, initializeRunner } from './service/runner'
 
 import './ui/icons'
 import './ui/layout'
+
+import { initializeThemePicker } from './ui/theme-picker'
 
 /** The div where the source code will be entered */
 const sourceCode = document.getElementById("source-code") as HTMLDivElement
@@ -89,31 +90,6 @@ const themeExtension = EditorView.theme({
 
 const themeCompartment = new Compartment()
 
-/** Determines the initial theme based on user preference or system preference */
-function getInitialTheme(): { theme: typeof themes[0]; isSystemPreference: boolean } {
-  const savedTheme = localStorage.getItem('theme') as ThemeId | null
-  if (savedTheme) {
-    const theme = themes.find(t => t.id === savedTheme) || themes[0]
-    return { theme, isSystemPreference: false }
-  }
-  // No saved preference - use system preference
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  const fallbackTheme = themes.find(t => t.dark === prefersDark) || themes[0]
-  return { theme: fallbackTheme, isSystemPreference: true }
-}
-
-const { theme: initialTheme } = getInitialTheme()
-
-/** Applies the given theme palette to the document by setting CSS variables for each color in the palette and updating the body's data-theme attribute */
-function applyThemePalette(theme: { palette: ThemePalette; dark: boolean }) {
-  const root = document.documentElement
-  Object.entries(theme.palette).forEach(([key, value]) => {
-    root.style.setProperty(`--theme-${key}`, value)
-  })
-  document.body.dataset.theme = theme.dark ? 'dark' : 'light'
-}
-
-applyThemePalette(initialTheme)
 
 /** Pending hash update timer */
 let hashUpdateTimer: number | undefined
@@ -140,6 +116,11 @@ const hashUpdateExtension = EditorView.updateListener.of((update) => {
   hashUpdateTimer = window.setTimeout(writeCodeToHash, HASH_UPDATE_DEBOUNCE_MS, update.state.doc.toString())
 })
 
+const initialTheme = initializeThemePicker((theme) => {
+  editor.dispatch({
+    effects: themeCompartment.reconfigure(theme.extension)
+  })
+})
 
 /** Initializes the CodeMirror editor with the specified extensions and attaches it to the designated parent element */
 const editor = new EditorView({
@@ -157,40 +138,3 @@ const editor = new EditorView({
 
 // Focus the editor as soon as it is ready for immediate typing
 editor.focus()
-
-// Populate Theme Selection Dropdown
-const themeSelect = document.getElementById('theme-select') as HTMLSelectElement
-
-themes.forEach(theme => {
-  const opt = document.createElement('option')
-  opt.value = theme.id
-  opt.textContent = theme.label
-  if (theme.id === initialTheme.id) {
-    opt.selected = true
-  }
-  themeSelect.appendChild(opt)
-})
-
-// Register event listener for the theme selection dropdown to change the editor's theme based on user selection
-themeSelect.addEventListener('change', (event) => {
-  const theme = themes.find(t => t.id === (event.target as HTMLSelectElement).value)
-  if (!theme) { return }
-
-  editor.dispatch({
-    effects: themeCompartment.reconfigure(theme.extension)
-  })
-
-  applyThemePalette(theme)
-  localStorage.setItem('theme', theme.id) // Save the selected theme to localStorage for persistence across sessions
-})
-
-// Listen for system theme changes and update if user hasn't set a preference
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-  if (!localStorage.getItem('theme')) {
-    const prefersDark = e.matches
-    const theme = themes.find(t => t.dark === prefersDark) || themes[0]
-    applyThemePalette(theme)
-    editor.dispatch({ effects: themeCompartment.reconfigure(theme.extension) })
-    themeSelect.value = theme.id
-  }
-})
