@@ -75,7 +75,7 @@ button {
 
     background-color: var(--theme-surface);
     color: var(--theme-foreground);
-    border: var(--theme-border);
+    border: none;
     border-radius: var(--border-radius);
     transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 
