@@ -1,4 +1,4 @@
-import { createEditor, setEditorTheme } from './editor'
+import { createEditor, getEditorContents, setEditorTheme } from './editor'
 import { initializeRunner } from './service/runner'
 import * as output from './ui/output'
 
@@ -12,7 +12,7 @@ import './modules/copy'
 
 import "./style.css"
 
-initializeRunner(() => editor.state.doc.toString())
+initializeRunner(getEditorContents)
 
 /** The initial editor contents, restored from a shared link fragment if present */
 let initialCode = ''
