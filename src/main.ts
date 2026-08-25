@@ -9,23 +9,11 @@ import { themes, type ThemeId, type ThemePalette } from './themes'
 
 import "./style.css"
 
-import { createIcons, Play, PanelBottom, PanelRight, Trash2, Copy, Check, Square } from 'lucide'
-
 import type { WorkerToMain } from "./worker"
 
 import { writeCodeToHash, decodeHashFragmentToCode, HASH_UPDATE_DEBOUNCE_MS } from "./share"
 
-createIcons({
-  icons: {
-    Play,
-    PanelBottom,
-    PanelRight,
-    Trash2,
-    Copy,
-    Check,
-    Square
-  }
-})
+import './modules/icons'
 
 /** Creates a MicroPython worker and wires up its message handling */
 function createWorker(): Worker {
