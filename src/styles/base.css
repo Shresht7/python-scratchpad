@@ -136,6 +136,15 @@ select {
     color: var(--theme-foreground);
 }
 
+select:hover {
+    background-color: var(--theme-border);
+}
+
+select:active {
+    background-color: var(--theme-foreground);
+    color: var(--theme-background);
+}
+
 /* ANIMATION */
 /* --------- */
 
