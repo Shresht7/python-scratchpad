@@ -6,7 +6,7 @@ main {
 
     display: grid;
     grid-template-rows: var(--panel-split) var(--gap-05) minmax(0, 1fr);
-    grid-template-columns: none;
+    grid-template-columns: 1fr;
 
     #divider {
         position: relative;
@@ -33,7 +33,7 @@ main {
 
     &[data-layout="vertical"] {
         grid-template-rows: var(--panel-split) var(--gap-05) minmax(0, 1fr);
-        grid-template-columns: none;
+        grid-template-columns: 1fr;
 
         & #divider {
             height: calc(var(--gap-05) * 0.8);
@@ -44,7 +44,7 @@ main {
 
     &[data-layout="horizontal"] {
         grid-template-columns: var(--panel-split) var(--gap-05) minmax(0, 1fr);
-        grid-template-rows: none;
+        grid-template-rows: 1fr;
 
         & #divider {
             width: calc(var(--gap-05) * 0.8);
