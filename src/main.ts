@@ -3,7 +3,7 @@ import { initializeRunner } from './service/runner'
 
 import './ui/icons'
 import './ui/layout'
-import { getText } from './ui/output'
+import { getText, display } from './ui/output'
 import { copyText } from './modules/copy'
 import './modules/clear'
 import { initializeThemePicker } from './ui/theme-picker'
@@ -13,7 +13,7 @@ import { restoreCodeFromHash } from "./modules/share"
 import "./style.css"
 
 // Load the initial source code from the URL hash if present, otherwise use an empty string
-const initialCode = restoreCodeFromHash()
+const { code: initialCode, warning: hashWarning } = restoreCodeFromHash()
 
 // Initialize the theme picker and register a on change callback to update the editor's theme
 const initialTheme = initializeThemePicker((theme) => {
@@ -34,3 +34,8 @@ copyOutputButton.addEventListener("click", () => copyText(getText(), copyOutputB
 
 // Initialize the code runner
 initializeRunner(() => editor.getContents())
+
+// Show any hash restore warning after the runner is ready
+if (hashWarning) {
+  display(hashWarning, { isError: true, isMuted: true })
+}

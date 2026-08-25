@@ -3,6 +3,9 @@ import { display } from '../ui/output'
 /** How long to wait after the last edit before updating the URL hash (in milliseconds) */
 export const HASH_UPDATE_DEBOUNCE_MS = 500
 
+/** Maximum length for the URL hash to keep shareable links usable across platforms */
+const MAX_HASH_URL_LENGTH = 8192
+
 /** Encodes source-code into a URL-safe hash fragment using base64url encoding */
 function encodeCodeToHashFragment(code: string): string {
     const bytes = new TextEncoder().encode(code)
@@ -18,7 +21,16 @@ function encodeCodeToHashFragment(code: string): string {
 export function writeCodeToHash(code: string) {
     if (code) {
         const hashFragment = encodeCodeToHashFragment(code)
-        history.replaceState(null, '', `#code=${hashFragment}`)
+        const hashUrl = `#code=${hashFragment}`
+
+        // If the hash URL is too long, display a warning and do not update the URL
+        if (hashUrl.length > MAX_HASH_URL_LENGTH) {
+            console.info('Code too long to share via URL')
+            display('Code too long to share via URL', { isMuted: true })
+            return
+        }
+
+        history.replaceState(null, '', hashUrl)
     } else if (location.hash) {
         history.replaceState(null, '', location.pathname + location.search)
     }
@@ -36,16 +48,21 @@ export function decodeHashFragmentToCode(hashFragment: string): string | null {
     }
 }
 
-/** Restores the editor contents from a shared URL hash fragment, showing a warning if malformed */
-export function restoreCodeFromHash(): string {
+/** The result of restoring code from the URL hash */
+export interface HashRestoreResult {
+    code: string
+    warning: string | null
+}
+
+/** Restores the editor contents from a shared URL hash fragment, returning a warning if malformed */
+export function restoreCodeFromHash(): HashRestoreResult {
     const match = location.hash.match(/#code=([^&]+)/)
-    if (!match) return ''
+    if (!match) return { code: '', warning: null }
     const decoded = decodeHashFragmentToCode(match[1])
     if (decoded === null) {
         console.warn('Malformed code hash in URL - ignoring')
-        display('Warning: Malformed code hash in URL - ignoring', { isError: true, isMuted: true })
         history.replaceState(null, '', location.pathname + location.search)
-        return ''
+        return { code: '', warning: 'Malformed code hash in URL - ignoring' }
     }
-    return decoded
+    return { code: decoded, warning: null }
 }
