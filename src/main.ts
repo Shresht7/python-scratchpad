@@ -5,13 +5,13 @@ import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
 import { Compartment } from "@codemirror/state"
-import { themes, type ThemeId, type ThemePalette } from './themes'
+import { themes, type ThemeId, type ThemePalette } from './ui/themes'
 
 import "./style.css"
 
-import type { WorkerToMain } from "./worker"
+import type { WorkerToMain } from "./service/worker"
 
-import { writeCodeToHash, decodeHashFragmentToCode, HASH_UPDATE_DEBOUNCE_MS } from "./share"
+import { writeCodeToHash, decodeHashFragmentToCode, HASH_UPDATE_DEBOUNCE_MS } from "./modules/share"
 
 import './ui/icons'
 
