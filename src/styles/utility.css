@@ -1,0 +1,19 @@
+.flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--gap-05);
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.output-error {
+    color: var(--theme-error);
+}
+
+.output-muted {
+    color: var(--theme-muted);
+}

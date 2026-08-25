@@ -1,0 +1,14 @@
+footer {
+    --font-size-small: 0.75rem;
+    font-size: var(--font-size-small);
+
+    select,
+    button {
+        font-size: inherit;
+    }
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
