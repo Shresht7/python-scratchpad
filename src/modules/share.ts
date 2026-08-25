@@ -1,4 +1,4 @@
-import { display } from '../ui/output'
+import { showToast } from '../ui/toast'
 
 /** How long to wait after the last edit before updating the URL hash (in milliseconds) */
 export const HASH_UPDATE_DEBOUNCE_MS = 500
@@ -26,7 +26,7 @@ export function writeCodeToHash(code: string) {
         // If the hash URL is too long, display a warning and do not update the URL
         if (hashUrl.length > MAX_HASH_URL_LENGTH) {
             console.info('Code too long to share via URL')
-            display('Code too long to share via URL', { isMuted: true })
+            showToast('Code too long to share via URL')
             return
         }
 
