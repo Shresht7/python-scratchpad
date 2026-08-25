@@ -55,19 +55,37 @@
   </main>
 
   <footer>
-    <div>
+    <div class="flex flex-row">
+      <button id="about-button" popovertarget="about-popover" title="About this project">
+        <i data-lucide="info"></i>
+        Info
+      </button>
+    </div>
+
+
+    <div class="flex flex-row" style="gap: 1.5rem;">
       <button id="toggle-layout" title="Toggle Layout">
         <i class="layout-vertical" data-lucide="panel-right"></i>
         <i class="layout-horizontal" data-lucide="panel-bottom"></i>
         Switch Layout
       </button>
-    </div>
-
-    <div>
-      <label for="theme-select">Theme:</label>
-      <select id="theme-select" title="Theme" aria-label="Editor Theme"></select>
+      <div>
+        <label for="theme-select">Theme:</label>
+        <select id="theme-select" title="Theme" aria-label="Editor Theme"></select>
+      </div>
     </div>
   </footer>
+
+  <div id="about-popover" popover>
+    <div class="popover-content">
+      <h2>Python Scratchpad</h2>
+      <p>For when you need to do something quick in Python.</p>
+      <p>Uses <a href="https://micropython.org/" target="_blank" rel="noopener">MicroPython</a> (WebAssembly) to run
+        Python directly in the browser. No installation required.</p>
+      <p class="muted">State is lost on page reload. This is a scratchpad, not an IDE.</p>
+      <p class="muted">MIT License</p>
+    </div>
+  </div>
 
   <script type="module" src="/src/main.ts"></script>
 </body>
