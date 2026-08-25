@@ -44,3 +44,8 @@ section#actions-toolbar {
     background-color: color-mix(in srgb, var(--theme-error) 85%, black);
     border-color: color-mix(in srgb, var(--theme-error) 85%, black);
 }
+
+#run-button.running:active {
+    background-color: color-mix(in srgb, var(--theme-error) 70%, black);
+    border-color: color-mix(in srgb, var(--theme-error) 70%, black);
+}
