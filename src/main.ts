@@ -1,13 +1,14 @@
 import { Editor } from './editor'
 import { initializeRunner } from './service/runner'
 
+import './ui/icons'
+import './ui/layout'
+import { getText } from './ui/output'
+import { copyText } from './modules/copy'
+import './modules/clear'
 import { initializeThemePicker } from './ui/theme-picker'
 import { restoreCodeFromHash } from "./modules/share"
 
-import './ui/icons'
-import './ui/layout'
-import './modules/clear'
-import './modules/copy'
 
 import "./style.css"
 
@@ -24,6 +25,12 @@ const editor = new Editor("source-code", initialCode, initialTheme.extension)
 
 // Focus the editor as soon as it is ready for immediate typing
 editor.focus()
+
+// Wire up copy buttons
+const copyCodeButton = document.getElementById("copy-code") as HTMLButtonElement
+const copyOutputButton = document.getElementById("copy-output") as HTMLButtonElement
+copyCodeButton.addEventListener("click", () => copyText(editor.getContents(), copyCodeButton))
+copyOutputButton.addEventListener("click", () => copyText(getText(), copyOutputButton))
 
 // Initialize the code runner
 initializeRunner(() => editor.getContents())

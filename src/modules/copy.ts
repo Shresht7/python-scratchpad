@@ -1,15 +1,8 @@
-import { getEditorContents } from '../editor'
-import { getText } from '../ui/output'
-
-/** The buttons to copy the source code and the output to the clipboard */
-const copyCodeButton = document.getElementById("copy-code") as HTMLButtonElement
-const copyOutputButton = document.getElementById("copy-output") as HTMLButtonElement
-
 /** How long the copied checkmark feedback stays visible on a copy button */
 const COPY_FEEDBACK_MS = 1000
 
 /** Copies the given text to the clipboard and briefly swaps the button's icon to a checkmark */
-async function copyText(text: string, button: HTMLButtonElement) {
+export async function copyText(text: string, button: HTMLButtonElement) {
   try {
     await navigator.clipboard.writeText(text)
   } catch (error) {
@@ -28,7 +21,3 @@ async function copyText(text: string, button: HTMLButtonElement) {
     delete button.dataset.timer
   }, COPY_FEEDBACK_MS))
 }
-
-// Register event listeners for the copy buttons to copy the source code and the output respectively
-copyCodeButton.addEventListener("click", () => copyText(getEditorContents(), copyCodeButton))
-copyOutputButton.addEventListener("click", () => copyText(getText(), copyOutputButton))
