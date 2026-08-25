@@ -1,14 +1,14 @@
-import "./style.css"
-
-import { decodeHashFragmentToCode } from "./modules/share"
-
-import * as output from './ui/output'
-import { initializeRunner } from './service/runner'
-import { initializeThemePicker } from './ui/theme-picker'
 import { createEditor, setEditorTheme } from './editor'
+import { initializeRunner } from './service/runner'
+import * as output from './ui/output'
+
+import { initializeThemePicker } from './ui/theme-picker'
+import { decodeHashFragmentToCode } from "./modules/share"
 
 import './ui/icons'
 import './ui/layout'
+
+import "./style.css"
 
 /** The button to clear the output display */
 const clearButton = document.getElementById("clear-output") as HTMLButtonElement
