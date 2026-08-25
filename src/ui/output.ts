@@ -10,9 +10,9 @@ type DisplayOptions = {
 export function display(text: string, { isError = false, isMuted = false }: DisplayOptions = {}) {
     const span = document.createElement('span')
     if (isError) {
-        span.className = 'output-error'
+        span.className = 'error'
     } else if (isMuted) {
-        span.className = 'output-muted'
+        span.className = 'muted'
     }
     span.textContent = text + '\n'
     displayOutput.appendChild(span)
