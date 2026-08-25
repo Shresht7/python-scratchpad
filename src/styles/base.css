@@ -7,10 +7,6 @@
     --font-family-title: "JetBrains Mono", monospace;
     --font-size-title: 1rem;
 
-    --clr-foreground: #333;
-    --clr-background: #f5f5f5;
-
-    --clr-border: #787878;
     --border-thickness: 1px;
     --border-radius: 4px;
     --border: var(--border-thickness) solid var(--clr-border);
